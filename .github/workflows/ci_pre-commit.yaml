@@ -1,0 +1,50 @@
+---
+name: Pre-Commit
+
+# Set default permissions to empty, make zizmor happy
+permissions: {}
+
+on:
+    # Should it be needed, allow manual triggering
+    workflow_dispatch:
+    # Run on any push to non-master branch
+    push:
+        branches-ignore:
+            - main
+
+jobs:
+    pre-commit:
+        name: run pre-commit hooks
+        runs-on: ubuntu-latest
+        permissions:
+            # Required for workflows in private repositories
+            contents: read
+
+        steps:
+            - name: Checkout Repo
+              id: checkout
+              uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+              with:
+                  persist-credentials: false
+                  fetch-depth: 0
+
+            - name: Install uv
+              id: setup_uv
+              uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
+              with:
+                  enable-cache: true
+                  ignore-nothing-to-cache: true
+
+            - name: Set up Python And Pre-Commit
+              id: setup_python_pre-commit
+              run: |
+                  uv python install
+                  uv tool install pre-commit
+
+            # TODO: only if early steps succeeded
+            - name: Run pre-commit hooks
+              id: check_pre_commit
+              run: |
+                  uv run pre-commit run --all-files
+
+# TODO: another for PyTest?

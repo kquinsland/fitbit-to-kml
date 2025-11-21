@@ -1,0 +1,86 @@
+---
+repos:
+    # Standard fille formatting / hygiene
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      # See: https://github.com/pre-commit/pre-commit-hooks/releases
+      rev: v6.0.0
+      hooks:
+          - id: trailing-whitespace
+          - id: end-of-file-fixer
+          - id: check-yaml
+          # The json format/linter/fixer does not like:
+          #     - vs-code json (technically JSON5)
+          #     - The json exports from the services/grafana/tools/dumper tool
+          - id: check-json
+            exclude: |
+                (?x)^(
+                    ^.vscode/.*\.json
+                )$
+          - id: pretty-format-json
+            exclude: |
+                (?x)^(
+                    ^.vscode/.*\.json
+                )$
+            args:
+                - --autofix
+                # Note: this hook does not honor the .editorconfig value so
+                #   they need to be kept in sync manually
+                - --indent=4
+                # Do not convert extended unicode characters to escape sequences
+                # e.g. 🤖 -> \ud83e\udd16
+                # This is mostly to preserve emojis and other greek letters in grafana dashboards
+                - --no-ensure-ascii
+
+    # Fix any markdown issues w/ the rendered docs
+    - repo: https://github.com/igorshubovych/markdownlint-cli
+      rev: v0.45.0
+      hooks:
+          - id: markdownlint
+
+    # Python code specifics
+    - repo: https://github.com/pre-commit/pygrep-hooks
+      # See: https://github.com/pre-commit/pygrep-hooks/tags
+      rev: v1.10.0
+      hooks:
+          - id: python-check-blanket-noqa
+
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.14.5
+      hooks:
+          # Lint, fixing what can be automatically fixed
+          - id: ruff-check
+            args: [--fix]
+          # Format to ensure consistent style
+          - id: ruff-format
+
+      # TODO: PyTest?
+
+    # Meta / Docs ... etc
+    ##
+    - repo: https://github.com/woodruffw/zizmor-pre-commit
+      # Zizmor version.
+      rev: v1.16.3
+      hooks:
+          - id: zizmor
+
+    - repo: https://github.com/renovatebot/pre-commit-hooks
+      rev: 42.11.0
+      hooks:
+          - id: renovate-config-validator
+            args: [--strict]
+
+    - repo: https://github.com/ericmjl/webp-pre-commit
+      rev: v0.0.12
+      hooks:
+          - id: convert-to-webp
+
+    - repo: https://github.com/adrienverge/yamllint
+      rev: v1.37.1
+      hooks:
+          - id: yamllint
+            args: [-c=.yamllint.yaml]
+
+    - repo: https://github.com/igorshubovych/markdownlint-cli
+      rev: v0.45.0
+      hooks:
+          - id: markdownlint

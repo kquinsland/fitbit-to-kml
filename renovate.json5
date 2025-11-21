@@ -1,0 +1,19 @@
+{
+    $schema: "https://docs.renovatebot.com/renovate-schema.json",
+    // support for pre-commit versions is in beta
+    // It seems that the default config is renovate will monitor for / propose updates to the pre-commit config file ONLY FOR RENOVATE itself.
+    // Good, but not automatic. The config below should get any minor or patch updates auto merged.
+    // Explicitly enabling support for pre-commit with `:enablePreCommit` in the hopes that auto-merge works.
+    // See: https://docs.renovatebot.com/modules/manager/pre-commit/#additional-information
+    extends: [
+        "config:recommended",
+        ":enablePreCommit"
+    ],
+    configMigration: true,
+    dependencyDashboard: true,
+    // Some drama w/r/t Pre-Commit
+    // See: https://docs.renovatebot.com/modules/manager/pre-commit/
+    "pre-commit": {
+        "enabled": true
+    }
+}

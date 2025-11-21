@@ -1,0 +1,6 @@
+# Don't need GPS data
+**/*.tcx
+**/*.kml
+
+# or test/debug
+**/*.json
