@@ -75,7 +75,7 @@ repos:
           - id: convert-to-webp
 
     - repo: https://github.com/adrienverge/yamllint
-      rev: v1.37.1
+      rev: v1.38.0
       hooks:
           - id: yamllint
             args: [-c=.yamllint.yaml]
